@@ -1,58 +1,50 @@
 import pygame
 import random
+import sys
 
 # Pygame Setup
 pygame.init()
 screen = pygame.display.set_mode((700, 520))
 clock = pygame.time.Clock()
-running = True
-font = pygame.font.Font(None, 36)
 
 def rand_vect():
-    return (pygame.Vector2(random.choice(range(screen.get_width())), random.choice(range(screen.get_height()))))
+    return pygame.Vector2(random.choice(range(screen.get_width())), random.choice(range(screen.get_height())))
 
-x = screen.get_width()
-r2l = True
-
-def game(running, r2l, x):
-    speed=5
+def game():
+    running = True
+    speed = 5
     x = screen.get_width() // 2
     y = screen.get_height() // 2
+    food_pos = rand_vect()
+    snake_pos=[]
+
     while running:
         for event in pygame.event.get():
-         if event.type == pygame.QUIT:
-            running = False
+            if event.type == pygame.QUIT:
+                running = False
 
-        # Fill the screen with a color to wipe away anything from the last frame
-         screen.fill("purple")
+        keys = pygame.key.get_pressed()
 
-
-
-        #ve = pygame.Vector2(x, screen.get_height() // 2)
-        #circle_pos=rand_vect()
-         keys = pygame.key.get_pressed()
-
-    # Check for specific keys
-         if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT]:
             x -= speed
-         if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT]:
             x += speed
-         if keys[pygame.K_UP]:
+        if keys[pygame.K_UP]:
             y -= speed
-         if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN]:
             y += speed
-        
-        pygame.draw.circle(screen, "red", (x,y) , 10)
 
-        pygame.time.delay(10)  # Adjust the delay for a smoother animation
-    
+        if pygame.Rect(x, y, 20, 20).colliderect(pygame.Rect(food_pos.x, food_pos.y, 10, 10)):
+            food_pos = rand_vect()
 
-      # Flip the display to put your work on the screen
+        screen.fill("purple")
+        pygame.draw.circle(screen, "green", (x, y), 10)
+        pygame.draw.circle(screen, "red", (food_pos.x, food_pos.y), 10)
+
         pygame.display.flip()
-
-    # Control the frame rate
         clock.tick(60)
 
     pygame.quit()
+    sys.exit()
 
-game(running, r2l, x)
+game()
