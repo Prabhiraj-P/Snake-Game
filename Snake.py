@@ -11,8 +11,6 @@ def rand_vect():
     return pygame.Vector2(random.choice(range(screen.get_width())), random.choice(range(screen.get_height())))
 
 
-snak_pos=[(screen.get_width//2,screen.get_height//2), (screen.get_width//2,screen.get_height//2),(screen.get_width//2,screen.get_height//2)]
-
 def snake(x,y):
    
     print(snak_pos)
@@ -55,7 +53,11 @@ def game():
 
         screen.fill("purple")
 
-        snake(x,y)
+        #snake(x,y)
+        pygame.draw.circle(screen, (0, 255, 0), (x, screen.get_height() // 2), 10)
+
+        x=x+1
+
         pygame.draw.circle(screen, "red", (food_pos.x, food_pos.y), 10)
         
         text_surface=font.render(score, True, (255, 255, 255))
