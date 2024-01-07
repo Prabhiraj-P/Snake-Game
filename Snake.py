@@ -15,18 +15,33 @@ wall_thick=20
 snake_tail_list=[]
 
 def rand_vect():
-    return pygame.Vector2(random.choice(range(wall_thick, screen.get_width()-wall_thick)), random.choice(range(wall_thick, screen.get_height() - wall_thick)))
+    return pygame.Vector2(random.choice(range(wall_thick+20, screen.get_width()-wall_thick-20)), random.choice(range(wall_thick+20, screen.get_height() - wall_thick-20)))
 
 
-def tail(x,y):
-    if len(snake_tail_list)<1:
-        snake_tail_list.append((x,y))
-    for i  in range(len(snake_tail_list)):
-        x=snake_tail_list[i][0]
-        y=snake_tail_list[i][1]
-        pygame.draw.circle(screen, (0, 255, 0), (x,y), 10)
-    
-
+def tail(x,y, direction):
+    global snake_tail_list
+    if direction =='-x':
+            x=x
+    elif direction =='+x':
+         x=x
+    elif direction =='-y':
+        y=y
+    else:
+        y=y
+    if len(snake_tail_list)>0:
+        #snake_tail_list.append((x,y))
+        snake_tail_list.insert(0,(x,y))
+        snake_tail_list=snake_tail_list[:-1]
+        for i  in range(len(snake_tail_list)):
+            tail_x, tail_y =snake_tail_list[i]
+            if i%2==0:
+                pygame.draw.circle(screen,'green', (tail_x,tail_y), 5)
+            else:
+                pygame.draw.circle(screen,'yellow', (tail_x,tail_y), 10)
+    else:
+        snake_tail_list.insert(0,(x+10,y))
+      
+            
 def border(screen, pygame):
     pygame.draw.rect(screen, 'blue', (0, 0, wall_thick, height)) #border on left
     pygame.draw.rect(screen, 'green', (width-wall_thick, 0, wall_thick, height)) #border on right
@@ -59,12 +74,12 @@ def game_over(x,y):
 
 def game():
     running = True
-    speed = 3
+    speed = 1
+    num=0
     score=str(0)
     x = screen.get_width() // 2
     y = screen.get_height() // 2
     food_pos = rand_vect()
-    snake_pos=[]
     direction='-x'
     font=pygame.font.Font(None, 36)
     while running:
@@ -92,14 +107,20 @@ def game():
 
 
         screen.fill("purple")
+        tail(x , y, direction)
+        #print(snake_tail_list)
+        
         x,y=get_direction(x,y,direction,speed)
 
         #snake(x,y)
         border(screen, pygame)
-        tail(x,y)
         game_over(x,y) #chek if its game over
-        pygame.draw.circle(screen, "red", (food_pos.x, food_pos.y), 10)
-        
+        if num %50!=0:
+            pygame.draw.circle(screen, "red", (food_pos.x, food_pos.y), 10)
+        else:
+             pygame.draw.circle(screen, "purple", (food_pos.x, food_pos.y), 10)
+        num+=1
+
         text_surface=font.render(score, True, (255, 255, 255))
         text_rect=text_surface.get_rect(center=(screen.get_width() // 20, 50))
         screen.blit(text_surface, text_rect)
