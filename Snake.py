@@ -58,6 +58,8 @@ def get_direction(x,y, direction, speed):
         return (x,y+speed)
 
 
+
+
 def game_over(x,y):
     if x <= wall_thick or x >= width-wall_thick or y>=height-wall_thick or y<= wall_thick:
         screen.fill("purple")
@@ -99,14 +101,17 @@ def game():
             direction='+y'
 
         if pygame.Rect(x, y, 20, 20).colliderect(pygame.Rect(food_pos.x, food_pos.y, 10, 10)):
+
             snake_tail_list.insert(0,(x,y))
-            print(snake_tail_list)
+            # print(snake_tail_list)
             score=str( int(score)+1)
             food_pos = rand_vect()
+            
         screen.fill("purple")
         tail(x , y, direction)
-        #print(snake_tail_list)        
-        x,y=get_direction(x,y,direction,speed)
+        #print(snake_tail_list)    
+       
+        x,y = get_direction(x,y,direction,speed)
 
         #snake(x,y)
         border(screen, pygame)
